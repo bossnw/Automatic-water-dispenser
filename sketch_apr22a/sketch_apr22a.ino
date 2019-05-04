@@ -3,18 +3,19 @@
 #define trigger2 4
 #define echo2 5
 #define trigger3 6
-#define echo3 7
+#define echo3 7 
 #define trigger4 8
 #define echo4 9
 #define LED 13
-#define MOSFET 12
 #define LED0 10
 #define LED1 11
- 
+#define MOSFET1 12
+#define MOSFET2 A5
+#define limitSwitch A4
  
  
 float time1=0,distance1=0,time2=0,distance2=0,time3=0,distance3=0,time4=0,distance4=0;
- 
+   
 void setup()
 {
 Serial.begin(9600);
@@ -30,41 +31,49 @@ Serial.begin(9600);
  pinMode(LED,OUTPUT);
  pinMode(LED0,OUTPUT);
  pinMode(LED1,OUTPUT);
- pinMode(MOSFET,OUTPUT);
-
- delay(2000);
+ pinMode(MOSFET1,OUTPUT);
+ pinMode(MOSFET2,OUTPUT);
+ pinMode(limitSwitch,INPUT);
+ delay(500);
 }
  
 void loop()
 {
  measure_distance();
-
- if(distance1<10&&distance2<10&&distance3<10&&distance4<10) 
+ if(distance1<6&&distance2<6&&distance3<6) 
  {
-   digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET,HIGH);
-   Serial.println("1234");
+   digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET1,HIGH);digitalWrite(MOSFET2,HIGH);
+   //Serial.println("123");
+   if(distance4<10)
+    {
+      digitalWrite(MOSFET1,LOW);digitalWrite(MOSFET2,LOW);
+    }
  }
- else if(distance1<10&&distance2<10&&distance3<10)
+ else if(distance1<6&&distance2<6)
  {
-  digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET,HIGH);
-  Serial.println("123");
+  digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET1,HIGH);digitalWrite(MOSFET2,HIGH);
+  //Serial.println("12");
+  if(distance4<14)
+    {
+      digitalWrite(MOSFET1,LOW);digitalWrite(MOSFET2,LOW);
+    }
  }
- else if(distance1<10&&distance2<10)
+ else if(distance1<6)
  {
-  digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET,HIGH);
-  Serial.println("12");
+  digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET1,HIGH);digitalWrite(MOSFET2,HIGH);
+  //Serial.println("1");
+  if(distance4<15)
+    {
+      digitalWrite(MOSFET1,LOW);digitalWrite(MOSFET2,LOW);
+    }
  }
- else if(distance1<10)
- {
-  digitalWrite(LED,HIGH);digitalWrite(LED0,HIGH);digitalWrite(LED1,LOW);digitalWrite(MOSFET,HIGH);
-  Serial.println("1");
- }
+ 
  else
  {   
-   digitalWrite(LED,LOW);digitalWrite(MOSFET,LOW);digitalWrite(LED0,LOW);digitalWrite(LED1,HIGH);
- }
-
- delay(500);
+   digitalWrite(LED,LOW);digitalWrite(MOSFET1,LOW);digitalWrite(MOSFET2,LOW);digitalWrite(LED0,LOW);digitalWrite(LED1,HIGH);
+   delay(500);
+ } 
+ 
 }
 
 void measure_distance()
@@ -76,7 +85,10 @@ void measure_distance()
  digitalWrite(trigger1,LOW);
  delayMicroseconds(2);
  time1=pulseIn(echo1,HIGH);
- distance1=time1*340/20000;
+ distance1=(time1/2)/29.1;
+ Serial.println("Dis1 "+ String (distance1));
+ //Serial.println(distance1);
+ 
 
  digitalWrite(trigger2,LOW);
  delayMicroseconds(2);
@@ -85,7 +97,8 @@ void measure_distance()
  digitalWrite(trigger2,LOW);
  delayMicroseconds(2);
  time2=pulseIn(echo2,HIGH);
- distance2=time2*340/20000;
+ distance2=(time2/2)/29.1;
+Serial.println("Dis2 "+ String (distance2));
 
   digitalWrite(trigger3,LOW);
  delayMicroseconds(2);
@@ -94,7 +107,8 @@ void measure_distance()
  digitalWrite(trigger3,LOW);
  delayMicroseconds(2);
  time3=pulseIn(echo3,HIGH);
- distance3=time3*340/20000;
+ distance3=(time3/2)/29.1;
+ Serial.println("Dis3 "+ String (distance3));
  
  digitalWrite(trigger4,LOW);
  delayMicroseconds(2);
@@ -103,5 +117,7 @@ void measure_distance()
  digitalWrite(trigger4,LOW);
  delayMicroseconds(2);
  time4=pulseIn(echo4,HIGH);
- distance4=time4*340/20000;
-}
+ Serial.println("Dis4 "+String(distance4));
+ distance4=(time4/2)/29.1;
+
+} 
